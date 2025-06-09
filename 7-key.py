@@ -28,7 +28,7 @@ def find_rtpmidi_port():
             return port
     raise RuntimeError('rtpmidid MIDI port not found!')
 
-rtpmidi_port_name = find_rtpmidi_port()
+rtpmidi_port_name = 'rtpmidid:Network Export 128:0'
 outport = mido.open_output(rtpmidi_port_name)
 
 last_note = None

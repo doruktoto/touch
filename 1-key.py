@@ -14,7 +14,7 @@ for port in mido.get_output_names():
     print(port)
 
 # Replace with the exact name of your rtpmidid port from the list above
-rtpmidi_port_name = 'rtpmidid export 128:0'
+rtpmidi_port_name = 'rtpmidid:Network Export 128:0'
 outport = mido.open_output(rtpmidi_port_name)
 
 NOTE = 24  # C1
