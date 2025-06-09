@@ -5,3 +5,4 @@ matplotlib
 lgpio
 mido 
 python-rtmidi
+kivy
