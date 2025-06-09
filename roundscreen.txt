@@ -1,0 +1,7 @@
+sudo nano /boot/config.txt
+
+hdmi_force_hotplug = 1
+hdmi_group = 2
+hdmi_mode=87
+hdmi_timings = 720 0 40 40 200 720 0 24 4 12 0 0 0 78 0 59400000 0 
+
