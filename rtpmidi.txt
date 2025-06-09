@@ -8,3 +8,8 @@ sudo dpkg -i rtpmidid_23.12_arm64.deb
 
 Then enter:
 sudo apt -f install
+
+start the daemon with: 
+sudo systemctl start rtpmidid
+enable at boot:
+sudo systemctl enable rtpmidid
