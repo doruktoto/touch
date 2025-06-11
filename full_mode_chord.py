@@ -209,58 +209,52 @@ class CircularScaleWidget(Widget):
         # Initialize touch sensor handler
         self.touch_handler = TouchSensorHandler()
         
-        # Create main layout
-        main_layout = BoxLayout(orientation='vertical', spacing=20, padding=[80, 80, 80, 80])
+        # Create main layout with more padding for circular screen
+        main_layout = BoxLayout(orientation='vertical', spacing=30, padding=[100, 100, 100, 100])
         
-        # Title (top center)
+        # Title (top center) - reduced size
         title = Label(
             text="Scale Selection + Chords", 
-            font_size=28, 
-            size_hint_y=0.15,
+            font_size=24, 
+            size_hint_y=0.12,
             color=(1, 1, 1, 1),
-            halign='center'
+            halign='center',
+            text_size=(520, None)
         )
         main_layout.add_widget(title)
         
-        # Status info layout
-        status_layout = BoxLayout(orientation='vertical', size_hint_y=0.25, spacing=10)
+        # Status info layout with more spacing
+        status_layout = BoxLayout(orientation='vertical', size_hint_y=0.2, spacing=15)
         
         # Current scale display
         self.current_scale_label = Label(
             text=f"Scale: {self.touch_handler.current_scale.replace('_', ' ')}", 
-            font_size=20, 
+            font_size=18, 
             color=(1, 1, 1, 1),
-            halign='center'
+            halign='center',
+            text_size=(520, None)
         )
         status_layout.add_widget(self.current_scale_label)
         
         # Pitch offset display
         self.pitch_offset_label = Label(
             text=f"Octave: {self.touch_handler.pitch_offset}", 
-            font_size=18, 
+            font_size=16, 
             color=(1, 1, 1, 1),
-            halign='center'
+            halign='center',
+            text_size=(520, None)
         )
         status_layout.add_widget(self.pitch_offset_label)
         
-        # Chord instruction
-        chord_info = Label(
-            text="Hold Pin 9 + Pins 0-3 for chords", 
-            font_size=16, 
-            color=(0.8, 0.8, 0.8, 1),
-            halign='center'
-        )
-        status_layout.add_widget(chord_info)
-        
         main_layout.add_widget(status_layout)
         
-        # Scale buttons in a 2x2 grid for better circular layout
-        button_container = BoxLayout(orientation='vertical', size_hint_y=0.6, spacing=15)
+        # Scale buttons in a 2x2 grid - increased size allocation
+        button_container = BoxLayout(orientation='vertical', size_hint_y=0.5, spacing=20)
         
         # First row of buttons
-        row1 = BoxLayout(orientation='horizontal', spacing=15, size_hint_y=0.5)
+        row1 = BoxLayout(orientation='horizontal', spacing=20, size_hint_y=0.45)
         # Second row of buttons  
-        row2 = BoxLayout(orientation='horizontal', spacing=15, size_hint_y=0.5)
+        row2 = BoxLayout(orientation='horizontal', spacing=20, size_hint_y=0.45)
         
         scale_names = list(available_scales.keys())
         
@@ -268,7 +262,7 @@ class CircularScaleWidget(Widget):
         for i, scale_name in enumerate(scale_names):
             btn = Button(
                 text=scale_name.replace('_', ' '), 
-                font_size=16,
+                font_size=14,
                 background_color=(0.2, 0.4, 0.8, 1)
             )
             btn.bind(on_press=lambda x, scale=scale_name: self.select_scale(scale))
@@ -281,6 +275,17 @@ class CircularScaleWidget(Widget):
         button_container.add_widget(row1)
         button_container.add_widget(row2)
         main_layout.add_widget(button_container)
+        
+        # Chord instruction at bottom - separate from status
+        chord_info = Label(
+            text="Hold Pin 9 + Pins 0-3 for chords", 
+            font_size=14, 
+            size_hint_y=0.08,
+            color=(0.8, 0.8, 0.8, 1),
+            halign='center',
+            text_size=(520, None)
+        )
+        main_layout.add_widget(chord_info)
         
         self.add_widget(main_layout)
         
