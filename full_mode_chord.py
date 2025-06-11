@@ -209,85 +209,80 @@ class CircularScaleWidget(Widget):
         # Initialize touch sensor handler
         self.touch_handler = TouchSensorHandler()
         
-        # Create main layout with more padding for circular screen
-        main_layout = BoxLayout(orientation='vertical', spacing=30, padding=[100, 100, 100, 100])
-        
-        # Title (top center) - reduced size
+        # Title (top center) - positioned manually
         title = Label(
             text="Scale Selection + Chords", 
             font_size=24, 
-            size_hint_y=0.12,
             color=(1, 1, 1, 1),
             halign='center',
-            text_size=(520, None)
+            text_size=(400, None),
+            pos=(160, 600),  # Centered horizontally, near top
+            size_hint=(None, None),
+            size=(400, 40)
         )
-        main_layout.add_widget(title)
+        self.add_widget(title)
         
-        # Status info layout with more spacing
-        status_layout = BoxLayout(orientation='vertical', size_hint_y=0.2, spacing=15)
-        
-        # Current scale display
+        # Current scale display - positioned in upper middle
         self.current_scale_label = Label(
             text=f"Scale: {self.touch_handler.current_scale.replace('_', ' ')}", 
             font_size=18, 
             color=(1, 1, 1, 1),
             halign='center',
-            text_size=(520, None)
+            text_size=(300, None),
+            pos=(210, 520),  # Centered horizontally
+            size_hint=(None, None),
+            size=(300, 30)
         )
-        status_layout.add_widget(self.current_scale_label)
+        self.add_widget(self.current_scale_label)
         
-        # Pitch offset display
+        # Pitch offset display - positioned in center
         self.pitch_offset_label = Label(
             text=f"Octave: {self.touch_handler.pitch_offset}", 
             font_size=16, 
             color=(1, 1, 1, 1),
             halign='center',
-            text_size=(520, None)
+            text_size=(200, None),
+            pos=(260, 380),  # Center of screen
+            size_hint=(None, None),
+            size=(200, 25)
         )
-        status_layout.add_widget(self.pitch_offset_label)
+        self.add_widget(self.pitch_offset_label)
         
-        main_layout.add_widget(status_layout)
-        
-        # Scale buttons in a 2x2 grid - increased size allocation
-        button_container = BoxLayout(orientation='vertical', size_hint_y=0.5, spacing=20)
-        
-        # First row of buttons
-        row1 = BoxLayout(orientation='horizontal', spacing=20, size_hint_y=0.45)
-        # Second row of buttons  
-        row2 = BoxLayout(orientation='horizontal', spacing=20, size_hint_y=0.45)
-        
+        # Scale buttons positioned in a 2x2 grid around center
         scale_names = list(available_scales.keys())
         
-        # Distribute buttons across rows
+        # Button positions around center (360, 360)
+        button_positions = [
+            (180, 280),  # Top-left
+            (460, 280),  # Top-right  
+            (180, 220),  # Bottom-left
+            (460, 220)   # Bottom-right
+        ]
+        
         for i, scale_name in enumerate(scale_names):
             btn = Button(
                 text=scale_name.replace('_', ' '), 
                 font_size=14,
-                background_color=(0.2, 0.4, 0.8, 1)
+                background_color=(0.2, 0.4, 0.8, 1),
+                pos=button_positions[i],
+                size_hint=(None, None),
+                size=(160, 50)
             )
             btn.bind(on_press=lambda x, scale=scale_name: self.select_scale(scale))
-            
-            if i < 2:
-                row1.add_widget(btn)
-            else:
-                row2.add_widget(btn)
+            self.add_widget(btn)
         
-        button_container.add_widget(row1)
-        button_container.add_widget(row2)
-        main_layout.add_widget(button_container)
-        
-        # Chord instruction at bottom - separate from status
+        # Chord instruction at bottom
         chord_info = Label(
             text="Hold Pin 9 + Pins 0-3 for chords", 
             font_size=14, 
-            size_hint_y=0.08,
             color=(0.8, 0.8, 0.8, 1),
             halign='center',
-            text_size=(520, None)
+            text_size=(400, None),
+            pos=(160, 120),  # Bottom center
+            size_hint=(None, None),
+            size=(400, 30)
         )
-        main_layout.add_widget(chord_info)
-        
-        self.add_widget(main_layout)
+        self.add_widget(chord_info)
         
         # Start touch sensor thread
         self.sensor_thread = threading.Thread(target=self.touch_handler.run, daemon=True)
