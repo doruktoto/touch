@@ -6,14 +6,16 @@ import mido
 import json
 import threading
 from kivy.app import App
+from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.clock import Clock
+from kivy.graphics import Color, Line
 
-# Set window size
-Window.size = (400, 600)
+# Set window size for circular screen
+Window.size = (720, 720)
 
 # Setup I2C and MPR121
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -200,77 +202,114 @@ class TouchSensorHandler:
         if self.last_chord is not None:
             self.send_chord_off(self.last_chord)
 
-class ScaleSelectionWidget(BoxLayout):
+class CircularScaleWidget(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.orientation = 'vertical'
-        self.spacing = 10
-        self.padding = 20
         
         # Initialize touch sensor handler
         self.touch_handler = TouchSensorHandler()
         
-        # Title
-        title = Label(text="Scale Selection + Chords", font_size=24, size_hint_y=0.15)
-        self.add_widget(title)
+        # Create main layout
+        main_layout = BoxLayout(orientation='vertical', spacing=20, padding=[80, 80, 80, 80])
+        
+        # Title (top center)
+        title = Label(
+            text="Scale Selection + Chords", 
+            font_size=28, 
+            size_hint_y=0.15,
+            color=(1, 1, 1, 1),
+            halign='center'
+        )
+        main_layout.add_widget(title)
+        
+        # Status info layout
+        status_layout = BoxLayout(orientation='vertical', size_hint_y=0.25, spacing=10)
         
         # Current scale display
         self.current_scale_label = Label(
-            text=f"Current: {self.touch_handler.current_scale}", 
-            font_size=18, 
-            size_hint_y=0.15
+            text=f"Scale: {self.touch_handler.current_scale.replace('_', ' ')}", 
+            font_size=20, 
+            color=(1, 1, 1, 1),
+            halign='center'
         )
-        self.add_widget(self.current_scale_label)
+        status_layout.add_widget(self.current_scale_label)
         
         # Pitch offset display
         self.pitch_offset_label = Label(
-            text=f"Octave Offset: {self.touch_handler.pitch_offset}", 
-            font_size=16, 
-            size_hint_y=0.1
+            text=f"Octave: {self.touch_handler.pitch_offset}", 
+            font_size=18, 
+            color=(1, 1, 1, 1),
+            halign='center'
         )
-        self.add_widget(self.pitch_offset_label)
+        status_layout.add_widget(self.pitch_offset_label)
         
         # Chord instruction
         chord_info = Label(
             text="Hold Pin 9 + Pins 0-3 for chords", 
-            font_size=14, 
-            size_hint_y=0.1
+            font_size=16, 
+            color=(0.8, 0.8, 0.8, 1),
+            halign='center'
         )
-        self.add_widget(chord_info)
+        status_layout.add_widget(chord_info)
         
-        # Scale buttons
-        button_layout = BoxLayout(orientation='vertical', spacing=10)
+        main_layout.add_widget(status_layout)
         
-        for scale_name in available_scales.keys():
+        # Scale buttons in a 2x2 grid for better circular layout
+        button_container = BoxLayout(orientation='vertical', size_hint_y=0.6, spacing=15)
+        
+        # First row of buttons
+        row1 = BoxLayout(orientation='horizontal', spacing=15, size_hint_y=0.5)
+        # Second row of buttons  
+        row2 = BoxLayout(orientation='horizontal', spacing=15, size_hint_y=0.5)
+        
+        scale_names = list(available_scales.keys())
+        
+        # Distribute buttons across rows
+        for i, scale_name in enumerate(scale_names):
             btn = Button(
                 text=scale_name.replace('_', ' '), 
-                size_hint_y=0.15,
-                font_size=16
+                font_size=16,
+                background_color=(0.2, 0.4, 0.8, 1)
             )
             btn.bind(on_press=lambda x, scale=scale_name: self.select_scale(scale))
-            button_layout.add_widget(btn)
+            
+            if i < 2:
+                row1.add_widget(btn)
+            else:
+                row2.add_widget(btn)
         
-        self.add_widget(button_layout)
+        button_container.add_widget(row1)
+        button_container.add_widget(row2)
+        main_layout.add_widget(button_container)
+        
+        self.add_widget(main_layout)
         
         # Start touch sensor thread
         self.sensor_thread = threading.Thread(target=self.touch_handler.run, daemon=True)
         self.sensor_thread.start()
         
         # Schedule UI updates
-        Clock.schedule_interval(self.update_pitch_display, 0.1)
+        Clock.schedule_interval(self.update_display, 0.1)
 
     def select_scale(self, scale_name):
         self.touch_handler.set_scale(scale_name)
-        self.current_scale_label.text = f"Current: {scale_name}"
+        self.current_scale_label.text = f"Scale: {scale_name.replace('_', ' ')}"
         print(f"Scale changed to: {scale_name}")
 
-    def update_pitch_display(self, dt):
+    def update_display(self, dt):
         # Update pitch offset display
-        self.pitch_offset_label.text = f"Octave Offset: {self.touch_handler.get_pitch_offset()}"
+        self.pitch_offset_label.text = f"Octave: {self.touch_handler.get_pitch_offset()}"
+    
+    def on_size(self, *args):
+        # Draw the circular background
+        self.canvas.before.clear()
+        with self.canvas.before:
+            Color(1, 1, 1, 1)  # White color
+            Line(circle=(360, 360, 360), width=3)  # Center circle with radius 360
 
 class FullModeChordApp(App):
     def build(self):
-        return ScaleSelectionWidget()
+        return CircularScaleWidget()
     
     def on_stop(self):
         # Clean shutdown
