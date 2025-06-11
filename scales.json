@@ -1,0 +1,8 @@
+{
+    "C4_heptatonic_scales": {
+      "Major_Ionian": [60, 62, 64, 65, 67, 69, 71],
+      "Natural_Minor_Aeolian": [60, 62, 63, 65, 67, 68, 70],
+      "Mixolydian": [60, 62, 64, 65, 67, 69, 70],
+      "Harmonic_Minor": [60, 62, 63, 65, 67, 68, 71]
+    }
+  }
