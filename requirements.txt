@@ -1,0 +1,8 @@
+adafruit-circuitpython-mpr121
+adafruit-blinka
+matplotlib
+# Note: collections is a built-in Python library and doesn't need to be installed 
+lgpio
+mido 
+python-rtmidi
+kivy
