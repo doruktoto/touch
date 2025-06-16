@@ -152,7 +152,7 @@ class TouchSensorHandler:
                     else:
                         base_note = base_note + self.pitch_offset
                 # Read arpeggiator button (pin 7)
-                touch_7 = mpr121[7].value
+                touch_7 = mpr121[8].value
                 # Read pitch down button (pin 8)
                 touch_8 = mpr121[8].value
                 # Arpeggiator logic
