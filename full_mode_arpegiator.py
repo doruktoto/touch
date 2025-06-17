@@ -105,8 +105,8 @@ class TouchSensorHandler:
         self.pitch_offset = 0
         self.PITCH_MIN = -12
         self.PITCH_MAX = 12
-        self.touch_prev_7 = False
         self.touch_prev_8 = False
+        self.touch_prev_9 = False
         self.touch_prev_5 = False  # For pitch up
         self.touch_prev_6 = False  # For pitch down
         self.arpeggiator = Arpeggiator(get_arpeggiator_notes, get_arpeggiator_tempo)
@@ -142,7 +142,7 @@ class TouchSensorHandler:
                 # Read touch state for pins 0-3 (keys)
                 state = tuple(int(mpr121[i].value) for i in range(4))
                 scale_index = touch_to_scale_index.get(state)
-                chord_button = mpr121[9].value
+                chord_button = mpr121[8].value
                 self.chord_button = chord_button
                 base_note = None
                 chord_notes = None
