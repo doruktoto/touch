@@ -241,7 +241,7 @@ class CircularScaleWidget(Widget):
         self.touch_handler = TouchSensorHandler(self.get_arpeggiator_notes, self.get_arpeggiator_tempo)
         # Title (top center) - positioned manually
         title = Label(
-            text="Scale Selection + Chords + Arpeggiator", 
+            text="CICADA", 
             font_size=24, 
             color=(1, 1, 1, 1),
             halign='center',
@@ -293,10 +293,10 @@ class CircularScaleWidget(Widget):
         # Scale buttons positioned in a 2x2 grid around center
         scale_names = list(available_scales.keys())
         button_positions = [
-            (180, 280),  # Top-left
-            (460, 280),  # Top-right  
-            (180, 220),  # Bottom-left
-            (460, 220)   # Bottom-right
+            (10, 360),  # Top-left
+            (550, 360),  # Top-right  
+            (360, 10),  # Bottom-left
+            (360, 660)   # Bottom-right
         ]
         for i, scale_name in enumerate(scale_names):
             btn = Button(
