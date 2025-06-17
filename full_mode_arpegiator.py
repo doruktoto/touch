@@ -293,10 +293,10 @@ class CircularScaleWidget(Widget):
         # Scale buttons positioned in a 2x2 grid around center
         scale_names = list(available_scales.keys())
         button_positions = [
-            (10, 360),  # Top-left
-            (550, 360),  # Top-right  
-            (360, 10),  # Bottom-left
-            (360, 660)   # Bottom-right
+            (10, 335),  # Top-left
+            (550, 335),  # Top-right  
+            (280, 10),  # Bottom-left
+            (280, 660)   # Bottom-right
         ]
         for i, scale_name in enumerate(scale_names):
             btn = Button(
