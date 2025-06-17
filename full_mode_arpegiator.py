@@ -107,6 +107,7 @@ class TouchSensorHandler:
         self.PITCH_MAX = 12
         self.touch_prev_7 = False
         self.touch_prev_8 = False
+        self.touch_prev_5 = False  # For pitch up
         self.arpeggiator = Arpeggiator(get_arpeggiator_notes, get_arpeggiator_tempo)
         self.arpeggiator_active = False
         self.chord_button = False
@@ -152,25 +153,33 @@ class TouchSensorHandler:
                     else:
                         base_note = base_note + self.pitch_offset
                 # Read arpeggiator button (pin 7)
-                touch_7 = mpr121[8].value
+                touch_9 = mpr121[9].value
                 # Read pitch down button (pin 8)
-                touch_8 = mpr121[7].value
+                touch_6 = mpr121[6].value
+                # Read pitch up button (pin 5)
+                touch_5 = mpr121[5].value
                 # Arpeggiator logic
-                if touch_7 and not self.touch_prev_7:
+                if touch_9 and not self.touch_prev_9:
                     # Start arpeggiator
                     self.arpeggiator_active = True
                     self.arpeggiator.start()
-                if not touch_7 and self.touch_prev_7:
+                if not touch_9 and self.touch_prev9:
                     # Stop arpeggiator
                     self.arpeggiator_active = False
                     self.arpeggiator.stop()
-                self.touch_prev_7 = touch_7
+                self.touch_prev_9 = touch_9
+                # Pitch up (on rising edge)
+                if touch_5 and not self.touch_prev_5:
+                    if self.pitch_offset < self.PITCH_MAX:
+                        self.pitch_offset += 1
+                        print(f"Pitch up: {self.pitch_offset}")
+                self.touch_prev_5 = touch_5
                 # Pitch down (on rising edge)
-                if touch_8 and not self.touch_prev_8:
+                if touch_6 and not self.touch_prev_6:
                     if self.pitch_offset > self.PITCH_MIN:
                         self.pitch_offset -= 1
                         print(f"Pitch down: {self.pitch_offset}")
-                self.touch_prev_8 = touch_8
+                self.touch_prev_6 = touch_6
                 # Only play notes if arpeggiator is not active
                 if not self.arpeggiator_active:
                     if chord_button and chord_notes:
