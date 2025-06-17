@@ -163,7 +163,7 @@ class TouchSensorHandler:
                     # Start arpeggiator
                     self.arpeggiator_active = True
                     self.arpeggiator.start()
-                if not touch_9 and self.touch_prev9:
+                if not touch_9 and self.touch_prev_9:
                     # Stop arpeggiator
                     self.arpeggiator_active = False
                     self.arpeggiator.stop()
