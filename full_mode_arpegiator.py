@@ -108,6 +108,7 @@ class TouchSensorHandler:
         self.touch_prev_7 = False
         self.touch_prev_8 = False
         self.touch_prev_5 = False  # For pitch up
+        self.touch_prev_6 = False  # For pitch down
         self.arpeggiator = Arpeggiator(get_arpeggiator_notes, get_arpeggiator_tempo)
         self.arpeggiator_active = False
         self.chord_button = False
